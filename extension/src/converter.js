@@ -1,6 +1,7 @@
 import { getWeidianId } from "./handlers/weidian";
 import { getTaobaoId } from "./handlers/taobao";
 import { get1688Id } from "./handlers/1688";
+import { getOriginalFromMulebuy } from "./handlers/mulebuy";
 
 function constructMulebuyUrl(platform, id) {
   const mulebuyUrl = new URL("https://mulebuy.com/product");
@@ -10,6 +11,16 @@ function constructMulebuyUrl(platform, id) {
 }
 
 function getMarketplaceAndId(url) {
+  if (url.includes("mulebuy.com")) {
+    const mulebuyData = getOriginalFromMulebuy(url);
+    if (mulebuyData) {
+      if (mulebuyData.searchUrl) {
+        return getMarketplaceAndId(mulebuyData.searchUrl);
+      }
+      return mulebuyData;
+    }
+  }
+
   if (url.includes("weidian.com") || url.includes("k.youshop10.com")) {
     const id = getWeidianId(url);
     if (id) return { marketplace: "weidian", mulebuyPlatform: "WEIDIAN", id };
