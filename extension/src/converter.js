@@ -1,6 +1,7 @@
 import { CnLink } from "cn-links";
 import { convertWeidianUrl } from "./handlers/weidian";
 import { convertTaobaoUrl } from "./handlers/taobao";
+import { convert1688Url } from "./handlers/1688";
 
 export function convertToMulebuy(url) {
   try {
@@ -14,6 +15,10 @@ export function convertToMulebuy(url) {
       url.includes("m.tb.cn")
     ) {
       return convertTaobaoUrl(url);
+    }
+
+    if (url.includes("detail.1688.com")) {
+      return convert1688Url(url);
     }
 
     const link = new CnLink(url);
