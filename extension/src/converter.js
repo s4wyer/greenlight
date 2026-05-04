@@ -1,16 +1,19 @@
 import { CnLink } from "cn-links";
 import { convertWeidianUrl } from "./handlers/weidian";
+import { convertTaobaoUrl } from "./handlers/taobao";
 
 export function convertToMulebuy(url) {
   try {
-    // Taobao short links have to be handled differently because they can't be easily converted to a URL
-    // We just let Mulebuy handle it with their scraper
-    if (url.includes("m.tb.cn") || url.includes("e.tb.cn")) {
-      return `https://mulebuy.com/?searchUrl=${encodeURIComponent(url)}&ref=201172299`;
-    }
-
     if (url.includes("weidian.com") || url.includes("k.youshop10.com")) {
       return convertWeidianUrl(url);
+    }
+
+    if (
+      url.includes("taobao.com") ||
+      url.includes("e.tb.cn") ||
+      url.includes("m.tb.cn")
+    ) {
+      return convertTaobaoUrl(url);
     }
 
     const link = new CnLink(url);
