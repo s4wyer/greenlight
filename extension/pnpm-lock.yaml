@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      cn-links:
-        specifier: ^1.46.0
-        version: 1.46.0
       crx:
         specifier: ^5.0.1
         version: 5.0.1
@@ -208,9 +205,6 @@ packages:
 
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
-
-  cn-links@1.46.0:
-    resolution: {integrity: sha512-ZSRivnW1UeftFzIBMa8MfFAxhp5HzgGagE61QaM5j8h4QWn6DmnjmzxkfsSf74aT0R8H4PCs0SDM823OQY+M3A==}
 
   commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -495,10 +489,6 @@ snapshots:
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
-
-  cn-links@1.46.0:
-    dependencies:
-      crypto-js: 4.2.0
 
   commander@2.20.3: {}
 

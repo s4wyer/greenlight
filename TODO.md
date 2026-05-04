@@ -3,5 +3,5 @@
 [ ] QC website support
   - [ ] FindQC
   - [ ] picks.ly
-[ ] Phase out cn-links, do all the processing in the extension
 [ ] QC photo gallery on mouseover
+[x] Phase out cn-links, do all the processing in the extension

@@ -12,7 +12,6 @@
   "license": "AGPL-3.0-or-later",
   "type": "commonjs",
   "dependencies": {
-    "cn-links": "^1.46.0",
     "crx": "^5.0.1"
   },
   "devDependencies": {

@@ -1,27 +1,13 @@
-export function convertWeidianUrl(url) {
+export function getWeidianId(url) {
   try {
     if (url.includes("weidian.com")) {
       const parsedUrl = new URL(url);
-      const itemId = parsedUrl.searchParams.get("itemID");
-
-      if (!itemId) {
-        console.error("No itemID found in the URL");
-        return null;
-      }
-
-      const mulebuyUrl = new URL(`https://mulebuy.com/product`);
-
-      mulebuyUrl.searchParams.set("id", itemId);
-      mulebuyUrl.searchParams.set("platform", "WEIDIAN");
-
-      return mulebuyUrl.toString();
-    } else {
-      console.error("Not a Weidian URL:", url);
+      return parsedUrl.searchParams.get("itemID") || parsedUrl.searchParams.get("itemId") || parsedUrl.searchParams.get("id");
     }
   } catch (error) {
-    console.error("Error converting URL:", url, error);
     return null;
   }
+  return null;
 }
 
 // TODO: support shortened Weidian URLs

@@ -1,52 +1,67 @@
-import { CnLink } from "cn-links";
-import { convertWeidianUrl } from "./handlers/weidian";
-import { convertTaobaoUrl } from "./handlers/taobao";
-import { convert1688Url } from "./handlers/1688";
+import { getWeidianId } from "./handlers/weidian";
+import { getTaobaoId } from "./handlers/taobao";
+import { get1688Id } from "./handlers/1688";
+
+function constructMulebuyUrl(platform, id) {
+  const mulebuyUrl = new URL("https://mulebuy.com/product");
+  mulebuyUrl.searchParams.set("id", id);
+  mulebuyUrl.searchParams.set("platform", platform);
+  return mulebuyUrl.toString();
+}
+
+function getMarketplaceAndId(url) {
+  if (url.includes("weidian.com") || url.includes("k.youshop10.com")) {
+    const id = getWeidianId(url);
+    if (id) return { marketplace: "weidian", mulebuyPlatform: "WEIDIAN", id };
+  }
+
+  if (url.includes("taobao.com") || url.includes("tmall.com")) {
+    const id = getTaobaoId(url);
+    if (id) return { marketplace: "taobao", mulebuyPlatform: "TAOBAO", id };
+  }
+
+  if (url.includes("1688.com")) {
+    const id = get1688Id(url);
+    if (id) return { marketplace: "1688", mulebuyPlatform: "ALI_1688", id };
+  }
+
+  return { marketplace: null, mulebuyPlatform: null, id: null };
+}
 
 export function convertToMulebuy(url) {
   try {
-    if (url.includes("weidian.com") || url.includes("k.youshop10.com")) {
-      return convertWeidianUrl(url);
+    // Taobao short links have to be handled differently because they can't be easily converted to a URL
+    // We just let Mulebuy handle it with their scraper
+    if (url.includes("m.tb.cn") || url.includes("e.tb.cn")) {
+      return `https://mulebuy.com/?searchUrl=${encodeURIComponent(url)}&ref=201172299`;
     }
 
-    if (
-      url.includes("taobao.com") ||
-      url.includes("e.tb.cn") ||
-      url.includes("m.tb.cn")
-    ) {
-      return convertTaobaoUrl(url);
+    const { mulebuyPlatform, id } = getMarketplaceAndId(url);
+
+    if (!mulebuyPlatform || !id) {
+      return null;
     }
 
-    if (url.includes("detail.1688.com")) {
-      return convert1688Url(url);
-    }
-
-    const link = new CnLink(url);
-    const mulebuyUrl = link.as("mulebuy");
+    const mulebuyUrl = constructMulebuyUrl(mulebuyPlatform, id);
 
     // Add my referal code :)
-    const finalUrl = new URL(mulebuyUrl.href || mulebuyUrl);
+    const finalUrl = new URL(mulebuyUrl);
     finalUrl.searchParams.set("ref", "201172299");
 
     return finalUrl.href;
   } catch (error) {
-    console.error("Error converting URL:", url, error);
     return null;
   }
 }
 
 export function convertToDoppelFit(url) {
   try {
-    const link = new CnLink(url);
-    let marketplace = link.marketplace;
-    const id = link.id;
+    const { marketplace, id } = getMarketplaceAndId(url);
 
     if (!marketplace || !id) return null;
-    if (marketplace === "tmall") marketplace = "taobao";
 
     return `https://doppel.fit/item/${marketplace}/${id}`;
   } catch (error) {
-    console.error("Error converting to Doppel.fit URL:", url, error);
     return null;
   }
 }

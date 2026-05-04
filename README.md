@@ -4,11 +4,11 @@ A browser extension to automatically convert Chinese shopping links to agent lin
 
 ## Features
 
-- Automatically replaces Taobao, Weidian, 1688, and Tmall links on any webpage with Mulebuy links.
+- Automatically replaces Taobao, Weidian and 1688 links on any webpage with Mulebuy links.
 - Automatically handles shortened `m.tb.cn` and `e.tb.cn` links without using an external API.
 - Right-click any supported link to search for QC photos on Doppel.fit.
 - Manual conversion tool for quick link generation.
-- All standard link parsing happens locally using `cn-links` without external API calls, unlike other extensions.
+- All standard link parsing happens locally without external API calls, unlike other extensions.
 
 ## Installation
 

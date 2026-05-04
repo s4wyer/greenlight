@@ -36,8 +36,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
     const doppelLink = convertToDoppelFit(urlToConvert);
     if (doppelLink) {
       chrome.tabs.create({ url: doppelLink });
-    } else {
-      console.error("Could not convert to Doppel.fit URL:", urlToConvert);
     }
   }
 });
