@@ -34,4 +34,4 @@ To generate a new crx file:
 ```bash
 cd extension
 npx crx pack public -p key.pem -o greenlight.crx
-``
+```
