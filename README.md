@@ -12,10 +12,13 @@ A browser extension to automatically convert Chinese shopping links to agent lin
 
 ## Installation
 
-### CRX Package (recomended)
-- A signed package is available in the releases.
+### CRX (recomended)
+1. Go to the [releases](https://github.com/s4wyer/greenlight/releases/latest) and download the latest `greenlight.crx`.
+2. Open go to `chrome://extensions`.
+3. Enable "Developer mode".
+4. Drag and drop the `greenlight.crx` file anywhere on the page.
 
-### Developer Mode 
+### Unpacked Extension 
 1. Download or clone this repository.
 2. Open Chrome and go to `chrome://extensions`.
 3. Enable "Developer mode" in the top right.
