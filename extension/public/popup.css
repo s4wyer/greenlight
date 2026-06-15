@@ -1,0 +1,117 @@
+:root {
+	color-scheme: dark;
+	background: #1e1e1e;
+	color: #e5e5e5;
+	font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background: #1e1e1e;
+	color: #e5e5e5;
+}
+
+.panel {
+	width: 320px;
+	padding: 12px;
+	box-sizing: border-box;
+}
+
+h2 {
+	margin: 0 0 10px 0;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.label {
+	display: block;
+	margin: 10px 0 8px 0;
+	font-size: 12px;
+	color: #bdbdbd;
+}
+
+.input {
+	width: 100%;
+	box-sizing: border-box;
+	background: #2a2a2a;
+	color: #e5e5e5;
+	border: 1px solid #444;
+	padding: 6px 8px;
+	font-size: 12px;
+}
+
+.row {
+	display: flex;
+	gap: 8px;
+}
+
+.row .input {
+	flex: 1;
+}
+
+.button {
+	background: #2a2a2a;
+	color: #e5e5e5;
+	border: 1px solid #444;
+	padding: 6px 10px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.button:active {
+	background: #3a3a3a;
+}
+
+.input-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+#result {
+	margin-top: 12px;
+	font-size: 12px;
+	word-break: break-all;
+}
+
+#result:empty {
+	margin-top: 0;
+}
+
+#result a {
+	color: #58a6ff;
+	text-decoration: none;
+}
+
+#result a:hover {
+	text-decoration: underline;
+}
+
+.error {
+	color: #f87171;
+	word-break: normal;
+}
+
+.settings {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px solid #444;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.toggle-label {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 12px;
+	color: #bdbdbd;
+	cursor: pointer;
+}
+
+.toggle-label input[type="checkbox"] {
+	margin: 0;
+	cursor: pointer;
+}
