@@ -2,6 +2,7 @@ import { getWeidianId } from "./handlers/weidian";
 import { getTaobaoId } from "./handlers/taobao";
 import { get1688Id } from "./handlers/1688";
 import { getOriginalFromMulebuy } from "./handlers/mulebuy";
+import { getOriginalFromFishgoo } from "./handlers/fishgoo.js";
 
 function constructMulebuyUrl(platform, id) {
   const mulebuyUrl = new URL("https://mulebuy.com/product");
@@ -18,6 +19,13 @@ function getMarketplaceAndId(url) {
         return getMarketplaceAndId(mulebuyData.searchUrl);
       }
       return mulebuyData;
+    }
+  }
+
+  if (url.includes("fishgoo.com")) {
+    const fishgooData = getOriginalFromFishgoo(url);
+    if (fishgooData && fishgooData.searchUrl) {
+      return getMarketplaceAndId(fishgooData.searchUrl);
     }
   }
 
