@@ -15,8 +15,3 @@ yarn-error.log*
 # OS metadata
 .DS_Store
 Thumbs.db
-
-# Test artifacts
-extension/test_*.js
-extension/test_*.js.map
-test_*.js

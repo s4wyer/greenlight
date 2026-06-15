@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
         url.includes("taobao.com") ||
         url.includes("weidian.com") ||
         url.includes("1688.com") ||
-        url.includes("tmall.com")
+        url.includes("tmall.com") ||
+        url.includes("fishgoo.com")
       ) {
         input.value = url;
       }
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       resultDiv.innerHTML = `<a href="${newUrl}" target="_blank">${newUrl}</a>`;
       chrome.tabs.create({ url: newUrl });
     } else {
-      resultDiv.innerHTML = `<span class="error">Could not convert link. Ensure it's a valid Taobao, Weidian, or 1688 URL.</span>`;
+      resultDiv.innerHTML = `<span class="error">Could not convert link. Ensure it's a valid Taobao, Weidian, 1688, or Fishgoo URL.</span>`;
     }
   });
 });

@@ -18,7 +18,8 @@ function processLinks() {
         href.includes("1688.com") ||
         href.includes("tmall.com") ||
         href.includes("m.tb.cn") ||
-        href.includes("e.tb.cn")
+        href.includes("e.tb.cn") ||
+        href.includes("fishgoo.com")
       ) {
         const newUrl = convertToMulebuy(href);
         if (newUrl) {
