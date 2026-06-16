@@ -6,6 +6,7 @@ A browser extension to automatically convert Chinese shopping links to agent lin
 
 - Automatically replaces links on any webpage with Mulebuy links.
 - Automatically handles shortened `m.tb.cn` and `e.tb.cn` links without using an external API.
+- Automatically fix obfuscated links
 - Right-click any supported link to search for QC photos on Doppel.fit.
 - Manual conversion tool for quick link generation.
 - All standard link parsing happens locally without external API calls, unlike other extensions.

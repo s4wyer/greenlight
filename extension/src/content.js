@@ -1,8 +1,11 @@
 import { convertToMulebuy } from "./converter.js";
+import { fixRedditLinks } from "./linkFixer.js";
 
 function processLinks() {
   chrome.storage.local.get(["autoConvert"], (result) => {
     if (result.autoConvert === false) return;
+
+    fixRedditLinks();
 
     const links = document.querySelectorAll("a");
 

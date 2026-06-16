@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Greenlight",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Converts Taobao, Weidian, and 1688 links to Mulebuy links.",
   "permissions": ["activeTab", "contextMenus", "storage"],
   "background": {
