@@ -5,15 +5,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn = document.getElementById("convertBtn");
   const resultDiv = document.getElementById("result");
   const autoConvertToggle = document.getElementById("toggleAutoConvert");
+  const autoRedirectToggle = document.getElementById("toggleAutoRedirect");
   const rightClickToggle = document.getElementById("toggleRightClick");
 
-  chrome.storage.local.get(["autoConvert", "rightClick"], (result) => {
+  chrome.storage.local.get(["autoConvert", "autoRedirect", "rightClick"], (result) => {
     autoConvertToggle.checked = result.autoConvert !== false;
+    autoRedirectToggle.checked = result.autoRedirect === true; // Default false
     rightClickToggle.checked = result.rightClick !== false;
   });
 
   autoConvertToggle.addEventListener("change", () => {
     chrome.storage.local.set({ autoConvert: autoConvertToggle.checked });
+  });
+
+  autoRedirectToggle.addEventListener("change", () => {
+    chrome.storage.local.set({ autoRedirect: autoRedirectToggle.checked });
   });
 
   rightClickToggle.addEventListener("change", () => {

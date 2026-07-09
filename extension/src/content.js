@@ -3,13 +3,32 @@ import { fixRedditLinks } from "./linkFixer.js";
 
 let autoConvertEnabled = true;
 
-chrome.storage.local.get(["autoConvert"], (result) => {
+chrome.storage.local.get(["autoConvert", "autoRedirect"], (result) => {
   autoConvertEnabled = result.autoConvert !== false;
+
+  if (result.autoRedirect === true) {
+    if (!window.location.href.includes("mulebuy.com")) {
+      const newUrl = convertToMulebuy(window.location.href);
+      if (newUrl && newUrl !== window.location.href) {
+        window.location.replace(newUrl);
+      }
+    }
+  }
 });
 
 chrome.storage.onChanged.addListener((changes, area) => {
-  if (area === "local" && changes.autoConvert !== undefined) {
-    autoConvertEnabled = changes.autoConvert.newValue !== false;
+  if (area === "local") {
+    if (changes.autoConvert !== undefined) {
+      autoConvertEnabled = changes.autoConvert.newValue !== false;
+    }
+    if (changes.autoRedirect !== undefined && changes.autoRedirect.newValue === true) {
+      if (!window.location.href.includes("mulebuy.com")) {
+        const newUrl = convertToMulebuy(window.location.href);
+        if (newUrl && newUrl !== window.location.href) {
+          window.location.replace(newUrl);
+        }
+      }
+    }
   }
 });
 

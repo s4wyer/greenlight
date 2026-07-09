@@ -3,6 +3,7 @@ node_modules/
 extension/node_modules/
 
 # Build artifacts
+greenlight.crx
 extension/greenlight.crx
 extension/key.pem
 extension/public/*.map
