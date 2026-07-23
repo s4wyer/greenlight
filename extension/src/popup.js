@@ -1,4 +1,4 @@
-import { convertToMulebuy } from "./converter.js";
+import { convertToMulebuy, isSupportedUrl } from "./converter.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("linkInput");
@@ -8,11 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const autoRedirectToggle = document.getElementById("toggleAutoRedirect");
   const rightClickToggle = document.getElementById("toggleRightClick");
 
-  chrome.storage.local.get(["autoConvert", "autoRedirect", "rightClick"], (result) => {
-    autoConvertToggle.checked = result.autoConvert !== false;
-    autoRedirectToggle.checked = result.autoRedirect === true; // Default false
-    rightClickToggle.checked = result.rightClick !== false;
-  });
+  chrome.storage.local.get(
+    ["autoConvert", "autoRedirect", "rightClick"],
+    (result) => {
+      autoConvertToggle.checked = result.autoConvert !== false;
+      autoRedirectToggle.checked = result.autoRedirect === true; // Default false
+      rightClickToggle.checked = result.rightClick !== false;
+    },
+  );
 
   autoConvertToggle.addEventListener("change", () => {
     chrome.storage.local.set({ autoConvert: autoConvertToggle.checked });
@@ -33,13 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     if (tabs && tabs[0] && tabs[0].url) {
       const url = tabs[0].url;
-      if (
-        url.includes("taobao.com") ||
-        url.includes("weidian.com") ||
-        url.includes("1688.com") ||
-        url.includes("tmall.com") ||
-        url.includes("fishgoo.com")
-      ) {
+      if (isSupportedUrl(url)) {
         input.value = url;
       }
     }

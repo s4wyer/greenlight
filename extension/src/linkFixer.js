@@ -75,10 +75,17 @@ export function fixRedditLinks(rootElement = document.body) {
   for (const { node, newText } of nodesToUpdate) {
     const span = document.createElement("span");
 
-    span.innerHTML = newText.replace(
-      /(https?:\/\/[^\s]+)/g,
-      '<a href="$1">$1</a>',
-    );
+    const parts = newText.split(/(https?:\/\/[^\s]+)/g);
+    for (const part of parts) {
+      if (part.match(/^https?:\/\//)) {
+        const a = document.createElement("a");
+        a.href = part;
+        a.textContent = part;
+        span.appendChild(a);
+      } else if (part) {
+        span.appendChild(document.createTextNode(part));
+      }
+    }
 
     if (node.parentNode) {
       node.parentNode.replaceChild(span, node);

@@ -25,4 +25,3 @@ export function getOriginalFromFishgoo(url) {
   }
   return null;
 }
-

@@ -1,7 +1,7 @@
 export function getOriginalFromMulebuy(url) {
   try {
     const parsedUrl = new URL(url);
-    
+
     const searchUrl = parsedUrl.searchParams.get("searchUrl");
     if (searchUrl) {
       return { searchUrl };
@@ -9,7 +9,7 @@ export function getOriginalFromMulebuy(url) {
 
     const id = parsedUrl.searchParams.get("id");
     const platform = parsedUrl.searchParams.get("platform");
-    
+
     if (id && platform) {
       let marketplace = null;
       if (platform === "WEIDIAN") marketplace = "weidian";

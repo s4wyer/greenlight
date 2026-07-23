@@ -1,4 +1,4 @@
-import { convertToMulebuy } from "./converter.js";
+import { convertToMulebuy, isSupportedUrl } from "./converter.js";
 import { fixRedditLinks } from "./linkFixer.js";
 
 let autoConvertEnabled = true;
@@ -35,30 +35,13 @@ chrome.storage.onChanged.addListener((changes, area) => {
 function handleLinkClick(event) {
   if (!autoConvertEnabled) return;
 
-  let target = event.target;
-  let link = null;
-
-  while (target && target !== document) {
-    if (target.tagName === "A") {
-      link = target;
-      break;
-    }
-    target = target.parentNode;
-  }
+  const link = event.target.closest("a");
 
   if (link && link.href) {
     const href = link.href;
     if (href.includes("mulebuy.com")) return;
 
-    if (
-      href.includes("taobao.com") ||
-      href.includes("weidian.com") ||
-      href.includes("1688.com") ||
-      href.includes("tmall.com") ||
-      href.includes("m.tb.cn") ||
-      href.includes("e.tb.cn") ||
-      href.includes("fishgoo.com")
-    ) {
+    if (isSupportedUrl(href)) {
       const newUrl = convertToMulebuy(href);
       if (newUrl) {
         event.preventDefault();
@@ -72,60 +55,66 @@ function handleLinkClick(event) {
 document.addEventListener("click", handleLinkClick, true);
 document.addEventListener("auxclick", handleLinkClick, true);
 
+let processLinksTimeout = null;
+
 function processLinks() {
-  chrome.storage.local.get(["autoConvert"], (result) => {
-    if (result.autoConvert === false) return;
+  if (!autoConvertEnabled) return;
 
-    fixRedditLinks();
+  fixRedditLinks();
 
-    const links = document.querySelectorAll("a");
+  const links = document.querySelectorAll("a:not([data-converted='true'])");
 
-    links.forEach((link) => {
-      const href = link.href;
-      if (!href) return;
+  links.forEach((link) => {
+    const href = link.href;
+    if (!href) return;
 
-      if (href.includes("mulebuy.com")) return;
+    if (href.includes("mulebuy.com")) return;
 
-      if (
-        href.includes("taobao.com") ||
-        href.includes("weidian.com") ||
-        href.includes("1688.com") ||
-        href.includes("tmall.com") ||
-        href.includes("m.tb.cn") ||
-        href.includes("e.tb.cn") ||
-        href.includes("fishgoo.com")
-      ) {
-        const newUrl = convertToMulebuy(href);
-        if (newUrl) {
-          link.href = newUrl;
-          link.dataset.converted = "true";
-        }
+    if (isSupportedUrl(href)) {
+      const newUrl = convertToMulebuy(href);
+      if (newUrl) {
+        link.href = newUrl;
+        link.dataset.converted = "true";
       }
-    });
+    }
   });
 }
 
-processLinks();
+function debouncedProcessLinks() {
+  if (processLinksTimeout) {
+    clearTimeout(processLinksTimeout);
+  }
+  processLinksTimeout = setTimeout(processLinks, 100);
+}
+
+debouncedProcessLinks();
 
 const observer = new MutationObserver((mutations) => {
-  chrome.storage.local.get(["autoConvert"], (result) => {
-    if (result.autoConvert === false) return;
+  if (!autoConvertEnabled) return;
 
-    let shouldProcess = false;
-    for (let mutation of mutations) {
-      if (mutation.addedNodes.length > 0) {
-        shouldProcess = true;
-        break;
-      }
+  let shouldProcess = false;
+  for (let mutation of mutations) {
+    if (mutation.addedNodes.length > 0) {
+      shouldProcess = true;
+      break;
     }
+  }
 
-    if (shouldProcess) {
-      processLinks();
-    }
+  if (shouldProcess) {
+    debouncedProcessLinks();
+  }
+});
+
+if (document.body) {
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
   });
-});
-
-observer.observe(document.body, {
-  childList: true,
-  subtree: true,
-});
+} else {
+  document.addEventListener("DOMContentLoaded", () => {
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  });
+}

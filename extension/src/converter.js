@@ -49,9 +49,13 @@ function getMarketplaceAndId(url) {
 
 export function convertToMulebuy(url) {
   try {
-    // Taobao short links have to be handled differently because they can't be easily converted to a URL
-    // We just let Mulebuy handle it with their scraper
-    if (url.includes("m.tb.cn") || url.includes("e.tb.cn")) {
+    // short links have to be handled differently because they can't be easily converted to a URL locally
+    // we just let Mulebuy handle it with their scraper
+    if (
+      url.includes("m.tb.cn") ||
+      url.includes("e.tb.cn") ||
+      url.includes("k.youshop10.com")
+    ) {
       return `https://mulebuy.com/?searchUrl=${encodeURIComponent(url)}&ref=201172299`;
     }
 
@@ -63,7 +67,7 @@ export function convertToMulebuy(url) {
 
     const mulebuyUrl = constructMulebuyUrl(mulebuyPlatform, id);
 
-    // Add my referal code :)
+    // add my referal code :)
     const finalUrl = new URL(mulebuyUrl);
     finalUrl.searchParams.set("ref", "201172299");
 
@@ -83,4 +87,18 @@ export function convertToDoppelFit(url) {
   } catch (error) {
     return null;
   }
+}
+
+export function isSupportedUrl(url) {
+  if (!url || typeof url !== "string") return false;
+  return (
+    url.includes("taobao.com") ||
+    url.includes("weidian.com") ||
+    url.includes("1688.com") ||
+    url.includes("tmall.com") ||
+    url.includes("m.tb.cn") ||
+    url.includes("e.tb.cn") ||
+    url.includes("k.youshop10.com") ||
+    url.includes("fishgoo.com")
+  );
 }
