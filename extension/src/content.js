@@ -55,14 +55,33 @@ function handleLinkClick(event) {
 document.addEventListener("click", handleLinkClick, true);
 document.addEventListener("auxclick", handleLinkClick, true);
 
+let pendingNodes = [];
 let processLinksTimeout = null;
 
 function processLinks() {
   if (!autoConvertEnabled) return;
 
-  fixRedditLinks();
+  const nodesToProcess = pendingNodes.length > 0 ? pendingNodes : [document.body];
+  pendingNodes = []; // Reset for next batch
 
-  const links = document.querySelectorAll("a:not([data-converted='true'])");
+  fixRedditLinks(nodesToProcess);
+
+  const links = [];
+  
+  if (nodesToProcess[0] === document.body) {
+    const docLinks = document.querySelectorAll("a:not([data-converted='true'])");
+    links.push(...docLinks);
+  } else {
+    for (const node of nodesToProcess) {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        if (node.tagName === 'A' && !node.dataset.converted) {
+          links.push(node);
+        }
+        const innerLinks = node.querySelectorAll("a:not([data-converted='true'])");
+        links.push(...innerLinks);
+      }
+    }
+  }
 
   links.forEach((link) => {
     const href = link.href;
@@ -80,7 +99,12 @@ function processLinks() {
   });
 }
 
-function debouncedProcessLinks() {
+function debouncedProcessLinks(nodes) {
+  if (nodes) {
+    for (const node of nodes) {
+      pendingNodes.push(node);
+    }
+  }
   if (processLinksTimeout) {
     clearTimeout(processLinksTimeout);
   }
@@ -92,16 +116,17 @@ debouncedProcessLinks();
 const observer = new MutationObserver((mutations) => {
   if (!autoConvertEnabled) return;
 
-  let shouldProcess = false;
+  const addedNodes = [];
   for (let mutation of mutations) {
     if (mutation.addedNodes.length > 0) {
-      shouldProcess = true;
-      break;
+      for (let node of mutation.addedNodes) {
+        addedNodes.push(node);
+      }
     }
   }
 
-  if (shouldProcess) {
-    debouncedProcessLinks();
+  if (addedNodes.length > 0) {
+    debouncedProcessLinks(addedNodes);
   }
 });
 

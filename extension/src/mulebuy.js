@@ -4,13 +4,11 @@ function autoSearch() {
   const searchUrl = urlParams.get("searchUrl");
 
   if (searchUrl) {
-    const tryPopulate = setInterval(() => {
+    const populate = () => {
       const input = document.querySelector(".n-input__input-el");
       const searchBtn = document.querySelector(".search-btn");
 
       if (input && searchBtn) {
-        clearInterval(tryPopulate);
-
         const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
           window.HTMLInputElement.prototype,
           "value",
@@ -23,12 +21,23 @@ function autoSearch() {
         setTimeout(() => {
           searchBtn.click();
         }, 100);
+        return true;
       }
-    }, 500);
+      return false;
+    };
 
-    setTimeout(() => {
-      clearInterval(tryPopulate);
-    }, 10000);
+    if (!populate()) {
+      const observer = new MutationObserver((mutations, obs) => {
+        if (populate()) {
+          obs.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      setTimeout(() => {
+        observer.disconnect();
+      }, 10000);
+    }
   }
 }
 

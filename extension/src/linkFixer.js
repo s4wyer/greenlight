@@ -41,34 +41,52 @@ export function extractAndFixLinks(text) {
   return { hasChanges, newText };
 }
 
-export function fixRedditLinks(rootElement = document.body) {
+export function fixRedditLinks(nodes = [document.body]) {
   // we only really want to check Reddit because that's the only place links get obfuscated like this
   if (!window.location.hostname.includes("reddit.com")) {
     return;
   }
 
-  const walker = document.createTreeWalker(
-    rootElement,
-    NodeFilter.SHOW_TEXT,
-    null,
-    false,
-  );
+  if (!Array.isArray(nodes) && !(nodes instanceof NodeList)) {
+    nodes = [nodes];
+  }
 
   const nodesToUpdate = [];
-  let node;
 
-  while ((node = walker.nextNode())) {
-    const parentTag = node.parentNode
-      ? node.parentNode.nodeName.toUpperCase()
-      : "";
-    if (["A", "SCRIPT", "STYLE", "TEXTAREA", "NOSCRIPT"].includes(parentTag)) {
+  for (const rootNode of nodes) {
+    if (rootNode.nodeType === Node.TEXT_NODE) {
+      const { hasChanges, newText } = extractAndFixLinks(rootNode.nodeValue);
+      if (hasChanges) {
+        nodesToUpdate.push({ node: rootNode, newText });
+      }
       continue;
     }
 
-    const { hasChanges, newText } = extractAndFixLinks(node.nodeValue);
+    if (rootNode.nodeType !== Node.ELEMENT_NODE && rootNode.nodeType !== Node.DOCUMENT_NODE && rootNode.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) {
+      continue;
+    }
 
-    if (hasChanges) {
-      nodesToUpdate.push({ node, newText });
+    const walker = document.createTreeWalker(
+      rootNode,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false,
+    );
+
+    let node;
+    while ((node = walker.nextNode())) {
+      const parentTag = node.parentNode
+        ? node.parentNode.nodeName.toUpperCase()
+        : "";
+      if (["A", "SCRIPT", "STYLE", "TEXTAREA", "NOSCRIPT"].includes(parentTag)) {
+        continue;
+      }
+
+      const { hasChanges, newText } = extractAndFixLinks(node.nodeValue);
+
+      if (hasChanges) {
+        nodesToUpdate.push({ node, newText });
+      }
     }
   }
 
