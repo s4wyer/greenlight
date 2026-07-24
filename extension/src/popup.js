@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ["autoConvert", "autoRedirect", "rightClick"],
     (result) => {
       autoConvertToggle.checked = result.autoConvert !== false;
-      autoRedirectToggle.checked = result.autoRedirect === true; // Default false
+      autoRedirectToggle.checked = result.autoRedirect === true;
       rightClickToggle.checked = result.rightClick !== false;
     },
   );
@@ -39,6 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isSupportedUrl(url)) {
         input.value = url;
       }
+    }
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      btn.click();
     }
   });
 
